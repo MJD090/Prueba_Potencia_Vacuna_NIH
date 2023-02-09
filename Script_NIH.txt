@@ -1,0 +1,77 @@
+writeLines(paste("PRUEBA DE POTENCIA VACUNA ANTIRRABICA (NIH)"))
+writeLines(paste("  "))
+writeLines(paste("Ingrese el numero sin '%' de la supervivencia inmediata mayor a 50%"))
+supMayor50<-as.numeric(scan(file = "", what = "",nmax=1))
+writeLines(paste("Ingrese el numero sin '%' de la supervivencia inmediata menor a 50%"))
+supmenor50<-as.numeric(scan(file = "", what = "",nmax=1))
+writeLines(paste("Ingrese el denominador de la dilucion para la supervivencia inmediata menor a 50%"))
+dn<-as.numeric(scan(file = "", what = "",nmax=1))
+
+#Pido los datos para formula de Logaritmo de la distancia proporcional
+
+logDistProp = trunc((log10(5)*(50-supmenor50)/(supMayor50-supmenor50))*10^3)/10^3
+
+#el resultado final sale con 3 decimales
+
+logDilmen50 = trunc(((-1)*log10(1/dn))*10^2)/10^2
+
+#el exponente de la dilucion menor al 50% de supervivencia sale con 2 decimales
+
+expAntiLog = logDilmen50-logDistProp
+
+#el exponente del antilogaritmo sale con 3 decimales porque el log de la dist proporcional sale con 3.
+
+antiLog = trunc((10^(expAntiLog))*10^2)/10^2
+
+#el antilogaritmo sale con 2 decimales
+
+DE50VacPrueba = (1/antiLog)
+
+
+#la DE50 se muestra como "1/antilogaritmo" pero se guarda la variable DE50VacPrueba para usarla. 
+
+writeLines(paste(""))
+writeLines(paste("DATOS INGRESADOS: "))
+writeLines(paste(""))
+writeLines(paste("Supervivencia inmediatamente mayor al 50%: ",supMayor50,"%"))
+writeLines(paste(""))
+writeLines(paste("Supervivencia inmediatamente menor al 50%: ",supmenor50,"%"))
+writeLines(paste(""))
+writeLines(paste("Dilucion inmediatamente menor al 50%: 1/",dn))
+writeLines(paste(""))
+writeLines(paste(""))
+writeLines(paste("DATOS OBTENIDOS: "))
+writeLines(paste(""))
+writeLines(paste("Log Distancia Proporcional: ",logDistProp))
+writeLines(paste(""))
+writeLines(paste("Log de la dilucion <50%: ",logDilmen50))
+writeLines(paste(""))
+writeLines(paste("Exponente: ",expAntiLog))
+writeLines(paste(""))
+writeLines(paste("AntiLogaritmo: ",antiLog))
+writeLines(paste(""))
+writeLines(paste("DE50 de la vacuna de prueba: 1/", antiLog))
+readline("OPRIMA ENTER PARA CONTINUAR")
+writeLines(paste(""))
+writeLines(paste("Ingrese el ID de la vacuna de referencia Ej: SENASA, MAPA"))
+idVacRef<-scan(file = "", what = "",nmax=1)
+writeLines(paste("Ingrese la potencia de la vacuna de referencia en UI/mL"))
+PotVacRef<-as.numeric(scan(file = "", what = "",nmax=1))
+writeLines(paste("Ingrese la reciproca de la DE50 de la vacuna de referencia"))
+RecVacRef<-as.numeric(scan(file = "", what = "",nmax=1))
+
+RecVacPrueba = antiLog
+RecVacRef = DE50VacRef
+PR = trunc((PotVacRef * (RecVacPrueba/RecVacRef))*10^2)/10^2
+
+#redondeo PR a 2 decimales
+
+writeLines(paste(""))
+writeLines(paste("DATOS INGRESADOS: "))
+writeLines(paste(""))
+writeLines(paste("Reciproca DE50 vacuna de prueba: 1/",RecVacPrueba))
+writeLines(paste(""))
+writeLines(paste("Reciproca DE50 vacuna de referencia: 1/",RecVacRef))
+writeLines(paste(""))
+writeLines(paste(""))
+writeLines(paste("La potencia Relativa (PR) de la vacuna de prueba por el metodo de NIH con Referencia ", idVacRef,"es de ",PR,"UI/mL"))
